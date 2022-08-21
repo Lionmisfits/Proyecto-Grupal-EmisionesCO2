@@ -1,7 +1,5 @@
 from pyspark.sql import SparkSession
-from pyspark.sql.functions import *
-from pyspark.sql.functions import *
-
+import pyspark.pandas as pd
 
 def create_spark_session():
     spark = SparkSession.builder \
@@ -25,14 +23,14 @@ output_data = "gs://Data_Lake/datalake/dataoutput/Energy_source/"):
     # Codigo de extraccion
     # delimiter: delimitador en el csv, cambiado segun se observe en el archivo
     # df_schema: Es las estructura de las columnas en el dataset (definirse previamente)
-    df_source = spark.read.format("CSV").option("header","true").option("delimiter",",").load(input_data)    
-
     # Codigo de todo el procesamiento y limpieza del dataset
     # Podria usarse SQL spark o Python spark
+    df_source = pd.read_csv(input_data)   
+    df_source = df_source[['country', 'year', 'population', 'primary_energy_consumption', 'oil_consumption']]
+    df_source.fillna(0, inplace=True)
 
     # Codigo de carga en la capa final del data lake
-    df_source.write.mode("overwrite").format("parquet").save(output_data)
-    pass
+    df_source.to_spark().write.mode("overwrite").format("parquet").save(output_data)
 
 
 def main():

@@ -94,12 +94,12 @@ with DAG("pipeline_etl",
                     project_id=PROJECT_ID
         )
 
-        submit_job_industries = DataprocSubmitJobOperator(
-                    task_id="extract_transform_industries", 
-                    job=PYSPARK_JOB_3, 
-                    region=REGION, 
-                    project_id=PROJECT_ID
-        )
+        #submit_job_industries = DataprocSubmitJobOperator(
+        #           task_id="extract_transform_industries", 
+        #           job=PYSPARK_JOB_3, 
+        #           region=REGION, 
+        #           project_id=PROJECT_ID
+        #)
 
         t_join = DummyOperator(task_id='t_join', dag=dag, trigger_rule='all_success')
 
@@ -137,6 +137,5 @@ with DAG("pipeline_etl",
 
         create_cluster >> submit_job_energy >> t_join
         create_cluster >> submit_job_source >> t_join
-        create_cluster >> submit_job_industries >> t_join
 
         t_join >> submit_job_bigquery >> delete_cluster >> finish_pipeline
