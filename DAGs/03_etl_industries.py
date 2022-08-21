@@ -10,8 +10,8 @@ def create_spark_session():
         .getOrCreate()
     return spark
 
-def process_energy_data(spark, input_data = "gs://Data_Lake/datalake/datainput/Energy_CO2/energyco2.csv", 
-output_data = "gs://Data_Lake/datalake/dataoutput/Energy_CO2/"):
+def process_industrial_data(spark, input_data = "gs://Data_Lake/datalake/datainput/industrial/Industrialglobal_power_plant_database.csv.csv", 
+output_data = "gs://Data_Lake/datalake/dataoutput/industrial/"):
     ''''
     Parameters:
         spark: the cursor object.
@@ -25,7 +25,7 @@ output_data = "gs://Data_Lake/datalake/dataoutput/Energy_CO2/"):
     # Codigo de extraccion
     # delimiter: delimitador en el csv, cambiado segun se observe en el archivo
     # df_schema: Es las estructura de las columnas en el dataset (definirse previamente)
-    df_energy = spark.read.format("CSV").option("header","true").option("delimiter","|").schema(df_schema).load(input_data)    
+    df_energy = spark.read.format("CSV").option("header","true").option("delimiter",",").load(input_data)    
 
     # Codigo de todo el procesamiento y limpieza del dataset
     # Podria usarse SQL spark o Python spark
@@ -37,7 +37,7 @@ output_data = "gs://Data_Lake/datalake/dataoutput/Energy_CO2/"):
 
 def main():
     spark = create_spark_session()
-    process_energy_data(spark)
+    process_industrial_data(spark)
 
 if __name__ == "__main__":
     main()
