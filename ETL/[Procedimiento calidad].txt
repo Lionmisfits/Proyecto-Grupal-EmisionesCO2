@@ -1,0 +1,32 @@
+Pasos de transformacion en Mysql:
+- Normalizacion de nombres de campos
+- Eleccion del tipo de dato correcto al campo (los que seas mas factibles)
+- Correcion dominio de campos : para campos de valores inconsistentes se suelen agregar campos auxiliares (para poder hacerles update respecto a los campos inconsistenes transformados)
+- Eliminacion de campos inservibles
+- Imputacion de valores :
+  > Cadenas : Se establece a '' o nulos como "Sin datos"
+  > Numericos : Depende de la estrategia (reemplazo por max, avg, etc)
+- Correccion de inconsistencia de campos relacionados entre tablas (valores coincidentes adecuados)
+- Uso de tablas auxiliares para almacenar registros con problemas (con el motivo especificado), o para corregir registros duplicados y luego ser devuelto a la tabla original, o para hacer trasnformaciones externas y luego actualizar en las tablas originales, o para la uniformidad de valores en los campos (valores que hacen referencia a un solo valor)
+- Chequeo de claves duplicadas
+- Manejo de claves subrogadas (en el caso de claves duplicadas, si los hay)
+- Normalizacion de tablas
+- Asociar las claves respecto a los campos involucrados en las relaciones
+
+Deteccion de outliers:
+- Detectamos los registros outliers, y los guardamos en una tabla auxiliar
+- Agregamos un campo Outlier por default 1
+- Actualizamos ese campo mediante el join de la tabla actual y la auxiliar, para establecer en cero el valor del campo outlier
+
+Indexacion:
+- Indexamos las primary key que falten, agregamos index a los campos foraneos
+- Indexamos a los campos de fecha que requerimos, ya que a veces podemos agrupar por cierta parte de fecha
+- Añadimos las FK a los campos foraneos
+
+Carga de datos:
+- Full: Carga del csv, toda la data desde cero
+- Delta: Como un insert de cierta cantidad de datos
+
+Triggers
+- Tabla de hechos: Suelen aplicarse tanto para insertar o actualizar(viejos y/o nuevos valores), poniendo el usuario y fecha de modificacion
+- Tablas de Registros: Contabiliza los registros insertados por carga, y tambien los registros por cada tabla
